@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚬</text></svg>" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Air Quality Index (AQI) to Cigarettes Converter" />
+    <link rel="apple-touch-icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚬</text></svg>" />
+    <link rel="manifest"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚬</text></svg>" />
+
+    <!-- Twitter link preview stuff -->
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@jasminedevv" />
+    <meta name="twitter:title" content="AQI to Cigarettes Converter" />
+    <meta name="twitter:description" content="How many cigarettes did you smoke on the west coast this week?" />
+    <meta name="twitter:image" content="https://jasminedevv.github.io/AQI2cigarettes/preview.png" />
+
+    <title>AQI to Cigarettes</title>
+    <script data-goatcounter="https://aqi2cigarettes.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <style>
+        body {
+            padding: 5% 10%;
+        }
+
+        #calculator {
+            margin: 0 auto;
+
+            text-align: center;
+        }
+
+        h1 {
+            text-align: center;
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>AQI to Cigarette Calculator</h1>
+
+    <div id="calculator">
+        <div>
+            <label>AQI: </label>
+            <input id="AQI" type="number" value="0">
+        </div>
+        <br><br>
+        <div>
+            <label>Hours Exposed: </label>
+            <input id="hours" type="number" value="24">
+        </div>
+        <br>
+        <button onclick="AQI2Cigs()" class="ui primary button">Calculate</button>
+        <br>
+
+        <p>It's like you've smoked</p>
+        <h2 id="result" class="ui header">0</h2>
+        <p>cigarettes</p>
+        <p class="red"></p>
+    </div>
+    <div id="info"><br>
+        <hr>
+        <h2>How does this work?</h2>
+        <p><b>Step 1</b>: I converted AQI back to PM 2.5 particle concentration. That's the number of particles in the
+            air that are a certain size. For this operation I used the same equation as <a
+                href="https://www.airnow.gov/aqi/aqi-calculator/">the Air Now calculator</a>.</p>
+        <p><b>Step 2</b>: based on <a
+                href="http://berkeleyearth.org/archive/air-pollution-and-cigarette-equivalence/">this research</a>, the
+            health impact of a particle concentration of 22μg/m3 per 24 hours is equivalent to about 1 cigarette. I
+            divided the concentration from step 1 by 22 and 24, then multiplied by the number of hours exposed. </p>
+        <p><b>Step 3</b>: the final result is rounded to the nearest integer. Because we are looking at
+            <i>impact to health</i>, not particles inhaled, we aren't measuring something precise and objective. In converting AQI to PM2.5 we lose a lot of information. Different types of air pollution can also be better or worse for you than cigarettes. A previous version of this calculator showed two decimal places, but I decided this could be misleading and opted to show an integer instead.
+        </p>
+
+        <i>Feedback or questions? Please <a href="https://github.com/jasminedevv/AQI2cigarettes">leave an issue on GitHub</a>. For more
+            information about why I built this the way I did, <a href="https://medium.com/@jasminedevv/i-made-an-aqi-to-cigarettes-calculator-f407177c85c2">read this</a>.</i>
+            <br><br>
+            <i>If you write something about this project I would love to hear about it! My
+            email address is my handle @protonmail.com.</i>
+            <br><br>
+            <i>Are you a student thinking of making your own AQI to cigarettes calculator? Go for it! It's a great little project. I would prefer if you did not copy and paste my code and text or host this site at a different address. If you make it all your own though there's no need to credit me.</i>
+            <br><br>
+            <i>Originally Published September 2020. Last updated
+            August 2025</i>
+    </div>
+    <br><br>
+
+</body>
+
+<script>
+
+    // pulled from page 2 of https://www.epa.gov/system/files/documents/2024-02/pm-naaqs-air-quality-index-fact-sheet.pdf
+    // previous version used outdated breakpoints as of feb 2024
+    const AQITablePM25 = {
+        concentrations: [
+            {
+                min: 0,
+                max: 9.0,
+                index: {
+                    min: 0,
+                    max: 50
+                }
+            },
+            {
+                min: 9.0,
+                max: 35.5,
+                index: {
+                    min: 50,
+                    max: 100
+                }
+            },
+            {
+                min: 35.0,
+                max: 55.5,
+                index: {
+                    min: 100,
+                    max: 150
+                }
+            },
+            {
+                min: 55.5,
+                max: 125.5,
+                index: {
+                    min: 150,
+                    max: 200
+                }
+            },
+            {
+                min: 125.5,
+                max: 225.5,
+                index: {
+                    min: 200,
+                    max: 300
+                }
+            },
+            {
+                min: 250.5,
+                max: 500.5,
+                index: {
+                    min: 300,
+                    max: 400
+                }
+            },
+            {
+                min: 225.5,
+                max: 99999999999, // yea I know
+                index: {
+                    min: 400,
+                    max: 99999999999
+                }
+            }
+        ]
+    }
+
+
+    /** Calculate PM 2.5 concentration per 24 hours based on AQI */
+    function calcPM25(AQI) {
+
+        /** Get the upper and lower bounds of particle concentration for corresponding AQI */
+        const breakpoints = AQITablePM25.concentrations.find(function (conc) {
+            if (conc.index.min <= AQI && conc.index.max > AQI) {
+                return conc
+            }
+        })
+
+        // particle concentration
+        const PM_min = breakpoints.min
+        const PM_max = breakpoints.max
+        // air quality index
+        const AQI_min = breakpoints.index.min
+        const AQI_max = breakpoints.index.max
+
+        // particle concentration based on given AQI
+        // this equation is based on the one used here: https://www.airnow.gov/aqi/aqi-calculator/
+        const PM = ((AQI - AQI_min) / (AQI_max - AQI_min)) * (PM_max - PM_min) + PM_min
+
+        return PM
+    }
+
+    function AQI2Cigs() {
+        const AQI = parseInt(document.getElementById('AQI').value);
+        const hours = parseInt(document.getElementById('hours').value);
+
+        if (isNaN(AQI) || isNaN(hours)) {
+            document.getElementById('result').textContent = 'Please enter valid numbers.';
+            return;
+        }
+
+        // Estimated particles for 24 hours
+        const PM24h = calcPM25(AQI)
+
+        // Source: http://berkeleyearth.org/archive/air-pollution-and-cigarette-equivalence/
+        const particlesPerCigPerHours = 22
+        const cigs = Math.round((PM24h / particlesPerCigPerHours / 24) * hours)
+
+        document.getElementById('result').textContent = cigs;
+    }
+
+</script>
+
+</html>
