@@ -63,6 +63,8 @@
         <p>cigarettes</p>
         <p class="red"></p>
     </div>
+    <div>    <p>Estimated PM2.5: <span id="pm-result">0</span> μg/m³</p>
+</div>
     <div id="info"><br>
         <hr>
         <h2>How does this work?</h2>
@@ -171,7 +173,6 @@
         // particle concentration based on given AQI
         // this equation is based on the one used here: https://www.airnow.gov/aqi/aqi-calculator/
         const PM = ((AQI - AQI_min) / (AQI_max - AQI_min)) * (PM_max - PM_min) + PM_min
-
         return PM
     }
 
@@ -186,6 +187,8 @@
 
         // Estimated particles for 24 hours
         const PM24h = calcPM25(AQI)
+        document.getElementById('pm-result').textContent = PM24h.toFixed(1);
+
 
         // Source: http://berkeleyearth.org/archive/air-pollution-and-cigarette-equivalence/
         const particlesPerCigPerHours = 22
