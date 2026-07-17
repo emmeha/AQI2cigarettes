@@ -46,7 +46,7 @@
 
     <div id="calculator">
         <div>
-            <label>AQI: </label>
+            <label for="AQI">PM2.5 AQI: </label>
             <input id="AQI" type="number" value="0">
         </div>
         <br><br>
@@ -58,39 +58,118 @@
         <button onclick="AQI2Cigs()" class="ui primary button">Calculate</button>
         <br>
 
-        <p>It's like you've smoked</p>
-        <h2 id="result" class="ui header">0</h2>
-        <p>cigarettes</p>
+        <p>Estimated health impact equivalent to</p>
+<h2 id="result" class="ui header">0</h2>
+<p>cigarettes</p>
+    
         <p class="red"></p>
     </div>
     <div>    <p>Estimated PM2.5: <span id="pm-result">0</span> μg/m³</p>
 </div>
-    <div id="info"><br>
-        <hr>
-        <h2>How does this work?</h2>
-        <p><b>Step 1</b>: I converted AQI back to PM 2.5 particle concentration. That's the number of particles in the
-            air that are a certain size. For this operation I used the same equation as <a
-                href="https://www.airnow.gov/aqi/aqi-calculator/">the Air Now calculator</a>.</p>
-        <p><b>Step 2</b>: based on <a
-                href="http://berkeleyearth.org/archive/air-pollution-and-cigarette-equivalence/">this research</a>, the
-            health impact of a particle concentration of 22μg/m3 per 24 hours is equivalent to about 1 cigarette. I
-            divided the concentration from step 1 by 22 and 24, then multiplied by the number of hours exposed. </p>
-        <p><b>Step 3</b>: the final result is rounded to the nearest integer. In converting AQI to PM2.5 we lose some information. 
-            Different types of air pollution can also be more or less harmful than cigarettes. 
-            Because we are looking at <i>impact to health</i>, we aren't measuring something precise to begin with. An integer makes it more clear that the result is an estimate.
-        </p>
+<div id="info">
+    <br>
+    <hr>
 
-        <i>Feedback or questions? Please <a href="https://github.com/jasminedevv/AQI2cigarettes">leave an issue on GitHub</a>. For more
-            information about why I built this the way I did, <a href="https://medium.com/@jasminedevv/i-made-an-aqi-to-cigarettes-calculator-f407177c85c2">read this</a>.</i>
-            <br><br>
-            <i>If you write something about this project I would love to hear about it! My
-            email address is my handle @protonmail.com.</i>
-            <br><br>
-            <i>Are you a student thinking of making your own AQI to cigarettes calculator? Go for it! It's a great little project. I would prefer if you did not copy and paste my code and text or host this site at a different address. If you make it all your own though there's no need to credit me.</i>
-            <br><br>
-            <i>Originally Published September 2020. Last updated
-            August 2025</i>
-    </div>
+    <h2>How does this estimate work?</h2>
+
+    <p>
+        <strong>Important:</strong> This calculator only works with a
+        <strong>U.S. AQI value for PM2.5</strong>, also called fine-particle
+        pollution. An overall AQI value may instead be based on ozone, PM10,
+        carbon monoxide, sulfur dioxide, or nitrogen dioxide. If PM2.5 is not
+        the pollutant responsible for the AQI value, this conversion does not
+        apply.
+    </p>
+
+    <p>
+        <b>Step 1:</b> The calculator estimates the 24-hour average PM2.5
+        concentration represented by the entered AQI. It uses the EPA's current
+        PM2.5 AQI breakpoints and linear interpolation to convert the AQI value
+        into a concentration measured in micrograms per cubic meter
+        (μg/m³).
+    </p>
+
+    <p>
+        This reverse conversion is an estimate, not an exact reconstruction of
+        the original measurement. When the EPA calculates an AQI, PM2.5
+        concentrations are truncated to one decimal place and the resulting
+        AQI is rounded to the nearest integer. Some precision has therefore
+        already been removed from the reported AQI.
+    </p>
+
+    <p>
+        <b>Step 2:</b> Berkeley Earth developed a rough comparison based on
+        estimated health effects. Under that comparison, an average PM2.5
+        concentration of 22 μg/m³ for one day is approximately equivalent to
+        the health impact of smoking one cigarette.
+    </p>
+
+    <p>
+        The calculator divides the estimated PM2.5 concentration by 22, then
+        multiplies it by the fraction of a day entered:
+    </p>
+
+    <p>
+        <code>
+            cigarette equivalent =
+            (PM2.5 concentration ÷ 22) × (hours exposed ÷ 24)
+        </code>
+    </p>
+
+    <p>
+        This calculation assumes that the entered PM2.5 level remains constant
+        throughout the selected exposure period. Real air quality can change
+        significantly from hour to hour.
+    </p>
+
+    <p>
+        <b>Step 3:</b> The result is rounded to the nearest whole cigarette.
+        Because of this, an estimated equivalent below half a cigarette will
+        display as zero. The PM2.5 concentration shown above the explanation
+        provides a more detailed indication of the calculated exposure.
+    </p>
+
+    <h3>What does the result mean?</h3>
+
+    <p>
+        This number is a rough way to communicate the possible health impact
+        of PM2.5 pollution. It does not mean that breathing polluted air is
+        chemically identical to smoking cigarettes, and it is not a measure of
+        the exact amount of smoke or particles inhaled.
+    </p>
+
+    <p>
+        Actual exposure and health effects can vary based on the source and
+        composition of the pollution, whether a person is indoors or outdoors,
+        physical activity, breathing rate, age, existing health conditions,
+        and other factors. This calculator is informational and should not be
+        treated as medical advice or a personal risk assessment.
+    </p>
+
+    <p>
+        Sources:
+        <a href="https://www.airnow.gov/aqi/aqi-calculator/">
+            EPA AirNow AQI Calculator
+        </a>
+        and
+        <a href="https://berkeleyearth.org/air-pollution-and-cigarette-equivalence/">
+            Berkeley Earth's Air Pollution and Cigarette Equivalence
+        </a>.
+    </p>
+
+    <i>
+        Feedback or questions? Please
+        <a href="https://github.com/jasminedevv/AQI2cigarettes">
+            leave an issue on GitHub
+        </a>.
+    </i>
+
+    <br><br>
+
+    <i>
+        Originally published September 2020. Last updated July 2026.
+    </i>
+</div>
     <br><br>
 
 </body>
@@ -168,32 +247,34 @@ const PM25_BREAKPOINTS = [
     );
 }
 
-    function AQI2Cigs() {
-const AQI = Number(document.getElementById("AQI").value);
-const hours = Number(document.getElementById("hours").value);
+   function AQI2Cigs() {
+    const AQI = Number(document.getElementById("AQI").value);
+    const hours = Number(document.getElementById("hours").value);
 
-        if (isNaN(AQI) || isNaN(hours)) {
-            document.getElementById('result').textContent = 'Please enter valid numbers.';
-            return;
-        }
-
-        // Estimated particles for 24 hours
-        const PM24h = calcPM25(AQI)
-        document.getElementById('pm-result').textContent = PM24h.toFixed(1);
-
-
-
-const pm25PerCigaretteDay = 22;
-
-const cigarettes =
-    (pm25Concentration / pm25PerCigaretteDay) *
-    (hours / 24);
-
-        
-document.getElementById("result").textContent =
-    Math.round(cigarettes);
+    if (!Number.isFinite(AQI) || !Number.isFinite(hours) ||
+        AQI < 0 || hours < 0) {
+        document.getElementById("result").textContent =
+            "Please enter valid non-negative numbers.";
+        return;
     }
 
+    const pm25Concentration = calcPM25(AQI);
+
+    document.getElementById("pm-result").textContent =
+        pm25Concentration.toFixed(1);
+
+    const pm25PerCigaretteDay = 22;
+
+    const cigarettes =
+        (pm25Concentration / pm25PerCigaretteDay) *
+        (hours / 24);
+
+
+
+       document.getElementById("result").textContent =
+    cigarettes.toFixed(2);
+}
+    
 </script>
 
 </html>
