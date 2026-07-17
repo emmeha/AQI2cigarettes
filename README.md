@@ -1,11 +1,11 @@
 # AQI to Cigarettes Calculator - COPY
 This is a fork and fix of https://jasminedevv.github.io/AQI2cigarettes/
 
+Update the equation to fix an error and make it more clear and consistent with the research in the linked sources
+
 
 This project is based on [work by Richard A. Muller and Elizabeth A. Muller](http://berkeleyearth.org/archive/air-pollution-and-cigarette-equivalence/). Thanks to them for working out what a cigarette is worth in terms of health-risk.
 
-## Disclaimer
-I am not a scientist or even an academic. PRs and issues welcome - especially from real experts.
 
 ## Methods
 The PM 2.5 to AQI converter uses an equation I found in the code of [this calculator](https://www.airnow.gov/aqi/aqi-calculator/). The [breakpoints](https://www.epa.gov/system/files/documents/2024-02/pm-naaqs-air-quality-index-fact-sheet.pdf) are from the EPA. I assume that one cigarette [is equal to exposure to air pollution of 22 μg/m3 for 24 hours](http://berkeleyearth.org/archive/air-pollution-and-cigarette-equivalence/).
