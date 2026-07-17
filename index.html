@@ -97,88 +97,80 @@
 
 <script>
 
-    // pulled from page 2 of https://www.epa.gov/system/files/documents/2024-02/pm-naaqs-air-quality-index-fact-sheet.pdf
-    // previous version used outdated breakpoints as of feb 2024
-    const AQITablePM25 = {
-        concentrations: [
-            {
-                min: 0,
-                max: 9.0,
-                index: {
-                    min: 0,
-                    max: 50
-                }
-            },
-            {
-                min: 9.0,
-                max: 35.4,
-                index: {
-                    min: 51,
-                    max: 100
-                }
-            },
-            {
-                min: 35.5,
-                max: 55.4,
-                index: {
-                    min: 101,
-                    max: 150
-                }
-            },
-            {
-                min: 55.5,
-                max: 125.4,
-                index: {
-                    min: 151,
-                    max: 200
-                }
-            },
-            {
-                min: 125.5,
-                max: 225.4,
-                index: {
-                    min: 201,
-                    max: 300
-                }
-            },
-            {
-                min: 225.5,
-                max: 99999999999,
-                index: {
-                    min: 301,
-                    max: 99999999999
-                }
-            }
-        ]
+
+
+const PM25_BREAKPOINTS = [
+    {
+        aqiMin: 0,
+        aqiMax: 50,
+        pmMin: 0.0,
+        pmMax: 9.0
+    },
+    {
+        aqiMin: 51,
+        aqiMax: 100,
+        pmMin: 9.1,
+        pmMax: 35.4
+    },
+    {
+        aqiMin: 101,
+        aqiMax: 150,
+        pmMin: 35.5,
+        pmMax: 55.4
+    },
+    {
+        aqiMin: 151,
+        aqiMax: 200,
+        pmMin: 55.5,
+        pmMax: 125.4
+    },
+    {
+        aqiMin: 201,
+        aqiMax: 300,
+        pmMin: 125.5,
+        pmMax: 225.4
+    },
+    {
+        aqiMin: 301,
+        aqiMax: 500,
+        pmMin: 225.5,
+        pmMax: 325.4
+    }
+];
+
+    function calcPM25(aqi) {
+    if (!Number.isFinite(aqi) || aqi < 0) {
+        throw new Error("AQI must be a non-negative number.");
     }
 
+    // For AQI above 500, continue the final segment.
+    const breakpoint =
+        PM25_BREAKPOINTS.find(
+            bp => aqi >= bp.aqiMin && aqi <= bp.aqiMax
+        ) ??
+        (aqi > 500 ? PM25_BREAKPOINTS.at(-1) : null);
 
-    /** Calculate PM 2.5 concentration per 24 hours based on AQI */
-    function calcPM25(AQI) {
-
-        /** Get the upper and lower bounds of particle concentration for corresponding AQI */
-        const breakpoints = AQITablePM25.concentrations.find(function (conc) {
-            if (conc.index.min <= AQI && conc.index.max > AQI) {
-                return conc
-            }
-        })
-
-        // particle concentration
-        const PM_min = breakpoints.min
-        const PM_max = breakpoints.max
-        // air quality index
-        const AQI_min = breakpoints.index.min
-        const AQI_max = breakpoints.index.max
-
-        // particle concentration based on given AQI
-        // this equation is based on the one used here: https://www.airnow.gov/aqi/aqi-calculator/
-        const PM = ((AQI - AQI_min) / (AQI_max - AQI_min)) * (PM_max - PM_min) + PM_min
-        return PM
+    if (!breakpoint) {
+        throw new Error("Unable to find an AQI breakpoint.");
     }
+
+    const {
+        aqiMin,
+        aqiMax,
+        pmMin,
+        pmMax
+    } = breakpoint;
+
+    return (
+        ((aqi - aqiMin) / (aqiMax - aqiMin)) *
+        (pmMax - pmMin) +
+        pmMin
+    );
+}
 
     function AQI2Cigs() {
-        const AQI = parseInt(document.getElementById('AQI').value);
-        const hours = parseInt(document.getElementById('hours').value);
+const AQI = Number(document.getElementById("AQI").value);
+const hours = Number(document.getElementById("hours").value);
 
         if (isNaN(AQI) || isNaN(hours)) {
             document.getElementById('result').textContent = 'Please enter valid numbers.';
@@ -190,11 +182,16 @@
         document.getElementById('pm-result').textContent = PM24h.toFixed(1);
 
 
-        // Source: http://berkeleyearth.org/archive/air-pollution-and-cigarette-equivalence/
-        const particlesPerCigPerHours = 22
-        const cigs = Math.round((PM24h / particlesPerCigPerHours / 24) * hours)
 
-        document.getElementById('result').textContent = cigs;
+const pm25PerCigaretteDay = 22;
+
+const cigarettes =
+    (pm25Concentration / pm25PerCigaretteDay) *
+    (hours / 24);
+
+        
+document.getElementById("result").textContent =
+    Math.round(cigarettes);
     }
 
 </script>
