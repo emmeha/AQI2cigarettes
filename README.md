@@ -1,4 +1,7 @@
-# AQI to Cigarettes Calculator
+# AQI to Cigarettes Calculator - COPY
+This is a fork and fix of https://jasminedevv.github.io/AQI2cigarettes/
+
+
 This project is based on [work by Richard A. Muller and Elizabeth A. Muller](http://berkeleyearth.org/archive/air-pollution-and-cigarette-equivalence/). Thanks to them for working out what a cigarette is worth in terms of health-risk.
 
 ## Disclaimer
